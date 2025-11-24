@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { MainTabParamList } from '../types/NavigationTypes';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,148 +8,193 @@ import NavigationItemComponents from "../components/NavigationItemComponents";
 
 type HomeScreenProps = BottomTabScreenProps<MainTabParamList, 'Home'>;
 
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width * 0.75;
+
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
+    const handleDepartmentPress = () => {
+        navigation.navigate('Departemen' as any);
+    };
 
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
             <SafeAreaView style={styles.container}>
-                {/* Header */}
+                {/* Header dengan gradient */}
                 <View style={styles.header}>
                     <BrandComponents />
                 </View>
 
-                {/* Navigation Section */}
-                {/* Memanggil komponen item navigasi tunggal empat kali */}
-                <View style={styles.navigation}>
-                    <NavigationItemComponents title="Home" icon="home-outline" />
-                    <NavigationItemComponents title="Cart" icon="cart-outline" />
-                    <NavigationItemComponents title="Favorite" icon="heart-outline" />
-                    <NavigationItemComponents title="Profile" icon="person-outline" />
-                </View>
-
-                {/* Order Section */}
-                <View style={styles.order}>
-                    <Text style={styles.h1}>Order</Text>
+                {/* Bagian Order */}
+                <View style={styles.sectionContainer}>
+                    <Text style={styles.sectionTitle}>Announcement</Text>
                     <ScrollView
-                        contentContainerStyle={{ flexDirection: "row", gap: 20 }}
+                        contentContainerStyle={styles.horizontalScrollContent}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                     >
-                        <View style={styles.orderItem}>
-                            <View style={styles.orderItemImage}></View>
-                            <View style={styles.orderItemDescription}></View>
-                        </View>
-                        <View style={styles.orderItem}>
-                            <View style={styles.orderItemImage}></View>
-                            <View style={styles.orderItemDescription}></View>
-                        </View>
+                        {[1, 2, 3, 4].map((item, index) => (
+                            <View key={index} style={styles.orderItem}>
+                                <View style={styles.orderItemImage} />
+                                <View style={styles.orderItemDescription}>
+                                    <View style={styles.placeholderLine} />
+                                    <View style={[styles.placeholderLine, { width: '50%', marginTop: 8 }]} />
+                                </View>
+                            </View>
+                        ))}
                     </ScrollView>
                 </View>
 
-                {/* Favorite Section */}
-                <View style={styles.favorite}>
-                    <Text style={styles.h1}>Favorite</Text>
-                    <View style={styles.bannerContainer}></View>
-                </View>
-
-                {/* Food Section */}
-                <View style={styles.food}>
-                    <Text style={styles.h1}>Food</Text>
-                    <View>
-                        <View style={styles.foodItem}>
-                            <View style={styles.foodItemImage}></View>
-                            <View style={styles.foodItemDescription}></View>
-                        </View>
-                        <View style={styles.foodItem}>
-                            <View style={styles.foodItemImage}></View>
-                            <View style={styles.foodItemDescription}></View>
-                        </View>
-                        <View style={styles.foodItem}>
-                            <View style={styles.foodItemImage}></View>
-                            <View style={styles.foodItemDescription}></View>
-                        </View>
-                    </View>
+                {/* Bagian Department */}
+                <View style={styles.sectionContainer}>
+                    <Text style={styles.sectionTitle}>Department</Text>
+                    <TouchableOpacity
+                        style={styles.bannerContainer}
+                        onPress={handleDepartmentPress}
+                        activeOpacity={0.7}
+                    >
+                        <Text style={styles.bannerText}>
+                            View All Department
+                        </Text>
+                        <Text style={styles.arrowIcon}>→</Text>
+                    </TouchableOpacity>
                 </View>
             </SafeAreaView>
         </ScrollView>
     );
 };
 
-
 const styles = StyleSheet.create({
-    h1: {
-        fontSize: 22,
-        marginBottom: 15,
-        fontWeight: "bold",
-        color: "#333",
+    scrollContent: {
+        flexGrow: 1,
     },
     container: {
-        backgroundColor: "#082374ff",
         flex: 1,
+        backgroundColor: '#ffffff',
     },
     header: {
-        justifyContent: "center",
-        padding: 20,
-        backgroundColor: "#082374ff",
-        height: 160,
+        paddingVertical: 30,
+        paddingHorizontal: 20,
+        backgroundColor: '#f8fafc',
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+        elevation: 3,
     },
     navigation: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        backgroundColor: "#f5f5f5",
-        paddingVertical: 20,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        backgroundColor: '#ffffff',
+        paddingVertical: 15,
+        marginHorizontal: 20,
+        marginTop: -30,
+        borderRadius: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 8,
+        position: 'relative',
     },
-    order: {
-        backgroundColor: "#f5f5f5",
-        padding: 20,
+    sectionContainer: {
+        marginTop: 30,
+    },
+    sectionTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginBottom: 16,
+        color: '#333',
+        paddingHorizontal: 20,
+    },
+    horizontalScrollContent: {
+        paddingHorizontal: 20,
     },
     orderItem: {
-        flexDirection: "row",
-        backgroundColor: "#B0B0B0",
-        width: 280,
-        height: 100,
-        marginRight: 10,
+        width: CARD_WIDTH,
+        height: 140,
+        backgroundColor: '#ffffff',
+        borderRadius: 16,
+        marginRight: 16,
+        flexDirection: 'row',
+        padding: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
     },
     orderItemImage: {
-        backgroundColor: "#9E9E9E",
         width: 100,
-        height: 100,
+        height: '100%',
+        backgroundColor: '#e2e8f0',
+        borderRadius: 12,
+        marginRight: 12,
     },
     orderItemDescription: {
-        backgroundColor: "#757575",
         flex: 1,
-    },
-    favorite: {
-        backgroundColor: "#f5f5f5",
-        padding: 20,
+        paddingVertical: 4,
     },
     bannerContainer: {
-        backgroundColor: "silver",
-        height: 100,
-        borderRadius: 20,
+        backgroundColor: '#1d04d9ff',
+        marginHorizontal: 20,
+        borderRadius: 16,
+        minHeight: 140,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 5,
     },
-    food: {
-        backgroundColor: "#f5f5f5",
+    bannerText: {
+        color: '#ffffff',
+        textAlign: 'center',
         padding: 20,
+        fontSize: 18,
+        fontWeight: '600',
+    },
+    arrowIcon: {
+        color: '#ffffff',
+        fontSize: 28,
+        marginTop: 8,
+    },
+    foodSection: {
+        paddingHorizontal: 20,
+        paddingBottom: 40,
     },
     foodItem: {
-        flexDirection: "row",
-        backgroundColor: "#B0B0B0",
-        width: 280,
-        height: 100,
-        marginBottom: 10,
+        flexDirection: 'row',
+        backgroundColor: '#ffffff',
+        borderRadius: 16,
+        padding: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 3,
+        elevation: 2,
     },
     foodItemImage: {
-        backgroundColor: "#9E9E9E",
-        width: 100,
-        height: 100,
+        width: 80,
+        height: 80,
+        backgroundColor: '#e2e8f0',
+        borderRadius: 12,
+        marginRight: 16,
     },
     foodItemDescription: {
-        backgroundColor: "#757575",
         flex: 1,
+        justifyContent: 'center',
     },
+    placeholderLine: {
+        height: 12,
+        backgroundColor: '#cbd5e1',
+        borderRadius: 6,
+        width: '85%',
+        marginVertical: 2,
+    }
 });
 
 export default HomeScreen;

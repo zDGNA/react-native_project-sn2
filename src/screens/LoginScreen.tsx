@@ -1,113 +1,205 @@
 import { Text } from "@react-navigation/elements";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import React, { useState } from "react"; // 👈 Tambah useState
+import { Pressable, StyleSheet, TextInput, View, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { RootStackNavigationProp } from '../types/NavigationTypes';
+import Card from '../components/ui/card/index';
+import CardContent from '../components/ui/card/content';
 
 const LoginScreen = () => {
     const navigation = useNavigation<RootStackNavigationProp>();
+
+    // 1. Tambahkan state untuk input
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSignIn = () => {
+        // Logika autentikasi di sini
+        console.log('Username:', username);
+        console.log('Password:', password);
+        navigation.navigate('Main');
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <View style={styles.logo}></View>
+                <Card style={styles.logoCard}>
+                    <CardContent style={styles.logoCardContent}>
+                        <Text style={styles.logoText}>Logo</Text>
+                    </CardContent>
+                </Card>
+                <Text style={styles.headerTitle}>Welcome Back!</Text>
             </View>
+
             <View style={styles.body}>
-                <View style={styles.form}>
-                    <TextInput style={styles.formControl} placeholder='Username' />
-                    <TextInput style={styles.formControl} placeholder='Password' secureTextEntry={true} />
-                    <Pressable style=
-                        {styles.button}
-                        onPress={() =>
-                            navigation.navigate('Main')}
-                    >
-                        <Text style={styles.label}>SIGN IN</Text>
-                    </Pressable>
-                    <Pressable style={{
-                        ...styles.button,
-                        backgroundColor: '#fda642ff',
-                        borderColor: '#fb5607'
-                    }}>
-                        <Text style={{ ...styles.label, color: '#000000' }}>SIGN UP</Text>
-                    </Pressable>
+                <View style={styles.formContainer}>
+                    <Card style={StyleSheet.flatten([styles.card, styles.shadow, { width: '100%' }]) as ViewStyle}>
+                        <CardContent style={StyleSheet.flatten([styles.cardContent, { paddingVertical: 32 }]) as ViewStyle}>
+                            <TextInput
+                                placeholder="Username"
+                                placeholderTextColor="#94a3b8"
+                                style={styles.input}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                keyboardType="email-address"
+                                returnKeyType="next"
+                                onChangeText={setUsername}
+                                value={username}
+                            />
+                            <TextInput
+                                placeholder="Password"
+                                placeholderTextColor="#94a3b8"
+                                secureTextEntry
+                                style={styles.input}
+                                autoCapitalize="none"
+                                returnKeyType="done"
+                                onChangeText={setPassword}
+                                value={password}
+                            />
+
+                            <Pressable
+                                style={styles.signInButton}
+                                android_ripple={{ color: 'rgba(255,255,255,0.1)' }}
+                                onPress={handleSignIn}
+                                accessibilityRole="button"
+                            >
+                                <Text style={styles.signInButtonText}>SIGN IN</Text>
+                            </Pressable>
+
+                            <Pressable
+                                style={styles.signUpButton}
+                                android_ripple={{ color: 'rgba(0,0,0,0.08)' }}
+                                onPress={() => console.log('Sign Up pressed')}
+                                accessibilityRole="button"
+                            >
+                                <Text style={styles.signUpButtonText}>SIGN UP</Text>
+                            </Pressable>
+                        </CardContent>
+                    </Card>
                 </View>
             </View>
+
             <View style={styles.footer}>
-                <Text style={styles.textSecondary}>
-                    Agung Dagna
-                </Text>
-                <Text style={styles.textSecondary}>
-                    &copy; 2025
-                </Text>
+                <Text style={styles.footerText}>ASADE</Text>
+                <Text style={styles.footerText}>&copy; {new Date().getFullYear()}</Text>
             </View>
         </SafeAreaView>
-
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#ffffff',
     },
     header: {
+        flex: 1.2, // 👈 Naikkan rasio flex agar lebih banyak ruang di header
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f8fafc',
+        paddingTop: 20,
+    },
+    headerTitle: { // 👈 Style untuk teks tambahan di header
+        fontSize: 28,
+        fontWeight: '700',
+        color: '#1d04d9ff',
+        marginTop: 16,
+    },
+    logoCard: {
+        width: 120, // 👈 Sedikit diperkecil
+        height: 120,
+        borderRadius: 60,
+        backgroundColor: '#1d04d9ff',
+        opacity: 0.9,
+    },
+    logoCardContent: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
-    logo: {
-        width: 140,
-        height: 140,
-        backgroundColor: 'blue',
-        borderRadius: 140,
-    },
-    h1: {
-        fontSize: 22,
-        marginBottom: 15,
-        fontWeight: "bold",
-        color: "#333",
-        textAlign: 'center',
+    logoText: {
+        color: 'white',
+        fontSize: 22, // 👈 Sedikit diperkecil
+        fontWeight: 'bold',
     },
     body: {
-        height: 400,
+        flex: 2,
     },
-    form: {
+    formContainer: { // 👈 Container baru untuk centering form
         flex: 1,
-        padding: 30,
-        rowGap: 20,
+        justifyContent: 'center',
+        paddingHorizontal: 24,
     },
-    formControl: {
-        borderWidth: 1,
-        borderRadius: 8,
-        borderColor: '#adb5bd',
-        paddingHorizontal: 15,
-        paddingVertical: 20,
-
-
+    card: {
+        // Hapus marginHorizontal, marginTop, marginBottom karena sudah ditangani oleh formContainer
     },
-    button: {
-        backgroundColor: '#05059cff',
+    shadow: {
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 4, // 👈 Shadow lebih menonjol
+        },
+        shadowOpacity: 0.15, // 👈 Sedikit lebih tipis
+        shadowRadius: 5.46,
+        elevation: 10, // 👈 Elevation lebih tinggi
+    },
+    cardContent: {
+        // padding: 24, Dihapus karena ditangani oleh paddingVertical: 32 di JSX
+    },
+    input: {
         borderWidth: 1,
-        borderRadius: 8,
-        borderColor: '#00000',
-        paddingHorizontal: 10,
-        paddingVertical: 10,
+        borderColor: '#e2e8f0',
+        borderRadius: 10, // 👈 Radius lebih besar
+        paddingHorizontal: 16,
+        paddingVertical: 14, // 👈 Padding lebih tebal
+        marginBottom: 16,
+        fontSize: 16,
+        color: '#333',
+    },
+    signInButton: {
+        backgroundColor: '#1d04d9ff',
+        padding: 16,
+        borderRadius: 10,
         alignItems: 'center',
-
+        marginTop: 30, // 👈 Margin lebih besar
+        shadowColor: '#1d04d9ff', // 👈 Tambahkan shadow warna tombol
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 8,
     },
-    label: {
-        color: '#ffffff',
-        fontWeight: 'bold',
-        fontSize: 16
+    signInButtonText: {
+        color: 'white',
+        fontWeight: '800', // 👈 Lebih tebal
+        fontSize: 18,
+    },
+    signUpButton: {
+        backgroundColor: 'transparent', // 👈 Ubah menjadi transparan
+        borderWidth: 2,
+        borderColor: '#1d04d9ff', // 👈 Border menggunakan warna utama
+        padding: 16,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginTop: 16, // 👈 Sesuaikan margin
+    },
+    signUpButtonText: {
+        fontWeight: '700',
+        fontSize: 18,
+        color: '#1d04d9ff', // 👈 Warna teks sesuai border
     },
     footer: {
-        height: 80,
+        height: 60, // 👈 Sedikit lebih pendek
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: '#f8fafc',
+        borderTopWidth: 1,
+        borderTopColor: '#f0f0f0',
     },
-    textSecondary: {
-        fontWeight: 'bold',
-        color: '#000000'
-    },
+    footerText: {
+        color: '#94a3b8',
+        fontSize: 12, // 👈 Sedikit lebih kecil
+    }
 });
-export default LoginScreen;     
+
+export default LoginScreen;
