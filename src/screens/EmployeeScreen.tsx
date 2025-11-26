@@ -27,7 +27,7 @@ const EmployeeScreen: React.FC<EmployeeScreenProps> = ({ navigation }) => {
         setOpenId(openId === id ? null : id);
     };
 
-    const renderItem = ({ item }) => (
+    const renderItem = ({ item }: { item: typeof employees[0] }) => (
         <View style={styles.itemContainer}>
             <View style={styles.labelRow}>
                 <Text style={styles.employeeName}>{item.name}</Text>

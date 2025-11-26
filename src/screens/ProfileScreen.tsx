@@ -9,6 +9,7 @@ import Card from '../components/ui/card/index';
 import CardContent from '../components/ui/card/content';
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Image } from "react-native";
 
 type ProfileScreenProps = BottomTabScreenProps<MainTabParamList, keyof MainTabParamList>;
 
@@ -112,9 +113,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation, route }) => {
                     <Card style={styles.profileCard}>
                         <CardContent style={styles.cardContentStyle}>
                             <View style={styles.profileHeader}>
-                                <View style={styles.avatarContainer}>
-                                    <Ionicons name="person-circle" size={80} color="#1d04d9ff" />
-                                </View>
+                                <Image
+                                    source={require('../assets/profile-picture.jpg')}
+                                    style={styles.profileImage}
+                                />
                                 <View style={styles.userInfo}>
                                     <Text style={styles.usernameDisplay}>{username}</Text>
                                     <Text style={styles.roleDisplay}>Administrator HRD</Text>
@@ -360,12 +362,28 @@ const styles = StyleSheet.create({
         width: '100%',
         marginBottom: 20,
         backgroundColor: '#ffffff',
-        borderRadius: 16,
+        borderRadius: 20,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 4,
         elevation: 3,
+    },
+    profileImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        borderWidth: 3,
+        borderColor: '#1d04d9ff',
+        marginRight: 20,
+    },
+    profileSection: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    profileImageContainer: {
+        position: 'relative',
+        marginRight: 16,
     },
     cardContentStyle: {
         padding: 24,

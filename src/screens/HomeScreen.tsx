@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, Image, FlatList, Alert } from "react-native";
+import React from "react";
+import { View, Text, ScrollView, StyleSheet, Dimensions, TouchableOpacity, FlatList, Image } from "react-native";
 import { MainTabParamList } from '../types/NavigationTypes';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,7 +10,6 @@ type HomeScreenProps = BottomTabScreenProps<MainTabParamList, 'Home'>;
 
 const { width } = Dimensions.get('window');
 
-// Sample data untuk announcements
 const announcementsData = [
     {
         id: '1',
@@ -51,32 +50,10 @@ const announcementsData = [
 ];
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
-    // Ambil username dari context
     const { username } = useUser();
-    const [profileImage, setProfileImage] = useState<string | null>(null);
 
     const handleDivisionPress = () => {
         navigation.navigate('Division' as any);
-    };
-
-    const handleProfileImagePress = () => {
-        Alert.alert(
-            'Upload Photo',
-            'Pilih sumber gambar',
-            [
-                { text: 'Batal', style: 'cancel' },
-                { text: 'Dari Galeri', onPress: () => handleSelectImage() },
-                { text: 'Dari Kamera', onPress: () => handleCameraImage() }
-            ]
-        );
-    };
-
-    const handleSelectImage = () => {
-        Alert.alert('Info', 'Fitur galeri akan diintegrasikan dengan library image picker');
-    };
-
-    const handleCameraImage = () => {
-        Alert.alert('Info', 'Fitur kamera akan diintegrasikan dengan library camera');
     };
 
     const getStatusColor = (status: string) => {
@@ -138,25 +115,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                 {/* Header dengan Profile */}
                 <View style={styles.header}>
                     <View style={styles.profileSection}>
-                        <TouchableOpacity
-                            style={styles.profileImageContainer}
-                            onPress={handleProfileImagePress}
-                        >
-                            {profileImage ? (
-                                <Image
-                                    source={{ uri: profileImage }}
-                                    style={styles.profileImage}
-                                />
-                            ) : (
-                                <View style={styles.profileImagePlaceholder}>
-                                    <Ionicons name="person" size={40} color="#1d04d9ff" />
-                                </View>
-                            )}
+                        <View style={styles.profileImageContainer}>
+                            <Image
+                                source={require('../assets/profile-picture.jpg')}
+                                style={styles.profileImage}
+                            />
                             <View style={styles.cameraIcon}>
-                                <Ionicons name="camera" size={16} color="white" />
+                                <Ionicons name="camera" size={16} color="#ffffff" />
                             </View>
-                        </TouchableOpacity>
-
+                        </View>
                         <View style={styles.profileInfo}>
                             <Text style={styles.greeting}>Selamat Datang</Text>
                             <Text style={styles.username}>{username}</Text>
@@ -229,16 +196,6 @@ const styles = StyleSheet.create({
         position: 'relative',
         marginRight: 16,
     },
-    profileImagePlaceholder: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        backgroundColor: '#e0e7ff',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 3,
-        borderColor: '#1d04d9ff',
-    },
     profileImage: {
         width: 80,
         height: 80,
@@ -266,17 +223,20 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#94a3b8',
         fontWeight: '500',
+        fontFamily: 'Poppins-Regular',
     },
     username: {
         fontSize: 20,
         fontWeight: '700',
         color: '#1d04d9ff',
         marginVertical: 4,
+        fontFamily: 'Poppins-Bold',
     },
     role: {
         fontSize: 12,
         color: '#64748b',
         fontWeight: '500',
+        fontFamily: 'Poppins-Regular',
     },
     sectionContainer: {
         marginTop: 28,
@@ -293,11 +253,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#333',
         marginBottom: 16,
-    },
-    seeAll: {
-        fontSize: 14,
-        color: '#1d04d9ff',
-        fontWeight: '600',
+        fontFamily: 'Poppins-Bold',
     },
     announcementList: {
         marginBottom: 12,
@@ -333,11 +289,13 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#333',
         marginBottom: 4,
+        fontFamily: 'Poppins-SemiBold',
     },
     announcementDate: {
         fontSize: 13,
         color: '#64748b',
         marginBottom: 8,
+        fontFamily: 'Poppins-Regular',
     },
     announcementFooter: {
         flexDirection: 'row',
@@ -348,14 +306,13 @@ const styles = StyleSheet.create({
         fontSize: 11,
         fontWeight: '700',
         letterSpacing: 0.5,
+        fontFamily: 'Poppins-Bold',
     },
     daysLeft: {
         fontSize: 12,
         color: '#94a3b8',
         fontWeight: '500',
-    },
-    announcementAction: {
-        paddingLeft: 12,
+        fontFamily: 'Poppins-Regular',
     },
     bannerContainer: {
         backgroundColor: '#1d04d9ff',
@@ -377,6 +334,7 @@ const styles = StyleSheet.create({
         padding: 20,
         fontSize: 18,
         fontWeight: '600',
+        fontFamily: 'Poppins-SemiBold',
     },
     arrowIcon: {
         color: '#ffffff',
